@@ -57,7 +57,7 @@ export default class XlsxParser implements Base {
         let range = xlsx.utils.decode_range(learningObjectWorksheet['!ref']);
 
         // Iterate over each row in the range
-        for (let rowNum = 1; rowNum <= 8; rowNum++) {
+        for (let rowNum = 1; rowNum <= range.e.r; rowNum++) {
             for (let colNum = range.s.c; colNum <= 23; colNum++) {
                 let cellAddress = xlsx.utils.encode_cell({ r: rowNum, c: colNum });
                 let cell = learningObjectWorksheet[cellAddress];
