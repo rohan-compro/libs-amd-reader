@@ -1,4 +1,4 @@
-export const LearningObjectSheetColumnNames = [
+export const learningObjectsSheetColumns = [
     'LO',
     'LO Title',
     'Screen Number',

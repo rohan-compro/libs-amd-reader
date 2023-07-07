@@ -1,12 +1,10 @@
 import ParserFactory from "./parser-factory";
-import AmdSchema from "../schema/amd-schema";
-import ApplicationErrors from "../utilities/application-errors";
+import ApplicationCommonUtil from "../utilities/application-common.util";
 
 // Expose public APIs
 export default class AmdReaderController {
 
     constructor() { }
-
 
     /**
      * Parse the excel file using appropriate library and returns parsed data
@@ -19,20 +17,13 @@ export default class AmdReaderController {
             const factory = new ParserFactory();
             const parser = factory.create(config.parserType);
 
-            const parsedData = parser.parse(file);
-            parser.validateSchema(AmdSchema, parsedData, ApplicationErrors.LEARNING_OBJECT_SHEET_VALIDATION_FAILED);
+            const parsedAmdData = parser.parse(file);
+            ApplicationCommonUtil.validateAmdParsedData(parsedAmdData);
 
-            return parsedData;
+            return parsedAmdData;
         }
         catch (error) {
             throw error;
         }
-
-        // model = parser.parse(file)
-
-        // validator.validate(model); // ajv - declarative
-
-        // throw exception if not valid 
-        // exception - class type 
     }
 }

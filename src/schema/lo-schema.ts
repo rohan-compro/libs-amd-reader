@@ -1,4 +1,4 @@
-import ScreenSchema from './screen-shema';
+import ScreenSchema from './screen-schema';
 
 export default {
     type: 'object',

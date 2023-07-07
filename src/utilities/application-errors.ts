@@ -7,9 +7,9 @@ export default {
         message: 'Learning Object Sheets Column names validation failed',
         code: 'LEARNING_OBJECT_SHEET_COLUMN_NAMES_VALIDATION_FAILED'
     },
-    LEARNING_OBJECT_SHEET_VALIDATION_FAILED: {
-        message: 'Invalid Learning Object Sheet data.',
-        code: 'LEARNING_OBJECT_SHEET_VALIDATION_FAILED'
+    AMD_VALIDATION_FAILED: {
+        message: 'Invalid Excel Sheet data.',
+        code: 'AMD_VALIDATION_FAILED'
     },
 
 }
