@@ -1,5 +1,5 @@
 import ParserFactory from "./parser-factory";
-import ApplicationCommonUtil from "../utilities/application-common.util";
+import CommonUtil from "../utilities/common.util";
 
 // Expose public APIs
 export default class AmdReaderController {
@@ -18,7 +18,7 @@ export default class AmdReaderController {
             const parser = factory.create(config.parserType);
 
             const parsedAmdData = parser.parse(file);
-            ApplicationCommonUtil.validateAmdParsedData(parsedAmdData);
+            CommonUtil.validateAmdParsedData(parsedAmdData);
 
             return parsedAmdData;
         }

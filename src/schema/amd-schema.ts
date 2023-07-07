@@ -1,4 +1,4 @@
-export const ScreenSchema = {
+const ScreenSchema = {
     type: 'object',
     properties: {
         screenNumber: { type: 'number' },
@@ -100,7 +100,7 @@ export const ScreenSchema = {
     }
 };
 
-export const LoSchema = {
+const LoSchema = {
     type: 'object',
     properties: {
         lo: { type: 'string' },
@@ -133,7 +133,7 @@ export const LoSchema = {
     }
 };
 
-export const ProductInfoSchema = {
+const ProductInfoSchema = {
     type: 'object',
     properties: {
         projectName: { type: 'string' },

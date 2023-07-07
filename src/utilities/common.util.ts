@@ -4,7 +4,7 @@ import ApplicationErrors from "./application-errors";
 import AmdSchema from "../schema/amd-schema";
 import Amd from "../model/amd";
 
-export default class ApplicationCommonUtil {
+export default class CommonUtil {
 
     /**
      * Uses AJV library to validate schema of input object and throws error if validation fails
