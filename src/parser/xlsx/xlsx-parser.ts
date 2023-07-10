@@ -1,5 +1,5 @@
 import * as xlsx from 'xlsx';
-import { SheetNamesEnum, sheetNames } from '../../constants/sheet-names';
+import { SheetNamesEnum, validSheetNames } from '../../constants/sheet-names';
 import { learningObjectsSheetColumns } from '../../constants/learning-objects-sheet-columns';
 import Lo from '../../model/lo';
 import Amd from '../../model/amd';
@@ -24,19 +24,29 @@ export default class XlsxParser implements Base {
             this.workbook = xlsx.read(fileData, { type: 'buffer' });
 
             // validate sheet names
-            if (!CommonUtil.validateSheetNames(sheetNames, this.workbook.SheetNames)) {
+            if (!CommonUtil.validateSheetNames(validSheetNames, this.workbook.SheetNames)) {
                 throw new TransformError(ApplicationErrors.AMD_SHEET_NAMES_VALIDATION_FAILED);
             }
 
+            //generate all column names of learning object worksheet
+            const learningObjectWorksheet = this.workbook.Sheets[SheetNamesEnum.LEARNING_OBJECTS];
+            const availableColumnNames: string[] = [];
+            let range = xlsx.utils.decode_range(learningObjectWorksheet['!ref']);
+
+            for (let colNum = range.s.c; colNum <= range.e.c; colNum++) {
+                let cellAddress = xlsx.utils.encode_cell({ r: 0, c: colNum });
+                let cell = learningObjectWorksheet[cellAddress];
+                let cellValue = cell ? cell.v : null;
+                availableColumnNames.push(cellValue);
+            }
+
             // validate column names in learning object sheet
-            if (!CommonUtil.validateSheetColumns(this.workbook.Sheets[SheetNamesEnum.LEARNING_OBJECTS], learningObjectsSheetColumns)) {
+            if (!CommonUtil.validateSheetColumns(learningObjectsSheetColumns, availableColumnNames)) {
                 throw new TransformError(ApplicationErrors.LEARNING_OBJECT_SHEET_COLUMN_NAMES_VALIDATION_FAILED);
             }
 
-            const amd: Amd = this.parseLearningObjectSheet();
-            amd.productInfo = this.parseProductInfoSheet();
-
-            return amd;
+            const amdData: [Lo[], ProductInfo] = [this.parseLearningObjectSheet(), this.parseProductInfoSheet()];
+            return new Amd(...amdData);
         }
         catch (error) {
             throw error;
@@ -48,7 +58,7 @@ export default class XlsxParser implements Base {
      * @returns {AMD} Returns an AMD object after parsing Learning Object sheet
      */
     public parseLearningObjectSheet() {
-        const amd = new Amd();
+        let learningObjects: Lo[] = [];
         let lastLoArguments = [], screenArguments: any = [], screenArray = [];
 
         let learningObjectWorksheet = this.workbook.Sheets[SheetNamesEnum.LEARNING_OBJECTS];
@@ -70,8 +80,8 @@ export default class XlsxParser implements Base {
                             cellValue.toLocaleLowerCase().trim() == 'End'.toLocaleLowerCase().trim()) {
                             // handle end / signed off cellValue
                             lastLoArguments[2] = screenArray;
-                            lastLoArguments[3] = amd.learningObjects.length + 1;
-                            amd.learningObjects.push(new (Lo as any)(...lastLoArguments));
+                            lastLoArguments[3] = learningObjects.length + 1;
+                            learningObjects.push(new (Lo as any)(...lastLoArguments));
                             screenArguments = [];
                             screenArray = [];
                             lastLoArguments = [];
@@ -112,19 +122,15 @@ export default class XlsxParser implements Base {
                 screenArguments = [];
             }
         }
-        return amd;
+        return learningObjects;
     }
 
     public parseProductInfoSheet() {
-        let productInfoData: any[] = [];
+        let productInfoData = [];
         let productInfoWorksheet = this.workbook.Sheets[SheetNamesEnum.PRODUCT_INFO];
 
-        // Extract the range of cells in the productInfoWorksheet
-        let range = xlsx.utils.decode_range(productInfoWorksheet['!ref']);
-
         // Iterate over each row in the range
-        // for (let rowNum = range.s.r; rowNum <= range.e.r; rowNum++) {
-        for (let rowNum = range.s.r; rowNum <= 8; rowNum++) {
+        for (let rowNum = 1; rowNum <= 4; rowNum++) {
             let cellAddress = xlsx.utils.encode_cell({ r: rowNum, c: 1 });
             let cell = productInfoWorksheet[cellAddress];
             let cellValue = cell ? cell.v : null;

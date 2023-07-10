@@ -7,7 +7,7 @@ interface errorObjectInterface {
 
 interface optionsInterface {
   info: {
-    score: Amd
+    parsedAmdData: Amd
   }
 }
 

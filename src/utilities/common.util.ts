@@ -15,9 +15,7 @@ export default class CommonUtil {
         const { valid, errorMsg } = amdValidator(parsedAmdData);
         if (!valid) {
             throw new TransformError(ApplicationErrors.AMD_VALIDATION_FAILED, { message: errorMsg }, {
-                info: {
-                    score: parsedAmdData
-                }
+                info: { parsedAmdData }
             });
         }
     }

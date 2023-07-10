@@ -4,32 +4,32 @@ import * as xlsx from 'xlsx';
 export default class CommonUtil {
 
     /**
-     * Checks all required sheets are present in excel file or not
+     * Checks if all required sheets are present in excel file or not
+     * @param validSheetNames 
+     * @param availableSheetNames 
      * @returns Returns boolean value for whether all required sheets are present in excel file or not
      */
-    static validateSheetNames(requiredSheetNames: string[], availableSheetNames: string[]) {
-        return Object.values(requiredSheetNames).every((knownSheetName) => availableSheetNames.find((availableSheet: string) => availableSheet?.trim() === knownSheetName?.trim()));
+    static validateSheetNames(validSheetNames: string[], availableSheetNames: string[]) {
+        if (!(validSheetNames?.length > 0 && availableSheetNames?.length > 0)) return;
+
+        validSheetNames = validSheetNames.map(str => str.trim());
+        availableSheetNames = availableSheetNames.map(str => str.trim());
+
+        return validSheetNames.every((validSheetName: string) => availableSheetNames.includes(validSheetName));
     }
 
     /**
-     * Checks if all required column are present in the input sheet or not
-     * @param sheet 
-     * @param {string[]} knownColumnNames 
-     * @returns Returns boolean value for whether all required column are present in the input sheet or not
+     * Checks if all required column are present in available columns or not
+     * @param validColumnNames 
+     * @param availableColumnNames 
+     * @returns Returns boolean value for whether all required column are present in available columns or not
      */
-    static validateSheetColumns(sheet: any, knownColumnNames: string[]) {
-        if (!sheet || !knownColumnNames) return;
+    static validateSheetColumns(validColumnNames: string[], availableColumnNames: string[]) {
+        if (!(validColumnNames?.length > 0 && availableColumnNames?.length > 0)) return;
 
-        //generate all column names of sheet
-        const availableColumnNames: string[] = [];
-        let range = xlsx.utils.decode_range(sheet['!ref']);
-        for (let colNum = range.s.c; colNum <= range.e.c; colNum++) {
-            let cellAddress = xlsx.utils.encode_cell({ r: 0, c: colNum });
-            let cell = sheet[cellAddress];
-            let cellValue = cell ? cell.v : null;
-            availableColumnNames.push(cellValue);
-        }
+        validColumnNames = validColumnNames.map(str => str.trim());
+        availableColumnNames = availableColumnNames.map(str => str.trim());
 
-        return knownColumnNames.every((knownColName: string) => availableColumnNames.find((availColName) => knownColName?.trim() === availColName?.trim()));
+        return validColumnNames.every((validSheetName: string) => availableColumnNames.includes(validSheetName));
     }
 }

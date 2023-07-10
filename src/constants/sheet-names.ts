@@ -7,7 +7,7 @@ export enum SheetNamesEnum {
 }
 
 
-export const sheetNames = [
+export const validSheetNames = [
     'Learning Objects',
     'Report',
     'LO matrix creation',
