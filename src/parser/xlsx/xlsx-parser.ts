@@ -67,7 +67,7 @@ export default class XlsxParser implements Base {
         let range = xlsx.utils.decode_range(learningObjectWorksheet['!ref']);
 
         // Iterate over each row in the range
-        for (let rowNum = 1; rowNum <= range.e.r; rowNum++) {
+        for (let rowNum = 1; rowNum <= 8; rowNum++) {
             for (let colNum = range.s.c; colNum <= 23; colNum++) {
                 let cellAddress = xlsx.utils.encode_cell({ r: rowNum, c: colNum });
                 let cell = learningObjectWorksheet[cellAddress];
@@ -129,8 +129,11 @@ export default class XlsxParser implements Base {
         let productInfoData = [];
         let productInfoWorksheet = this.workbook.Sheets[SheetNamesEnum.PRODUCT_INFO];
 
+        // Extract the range of cells in the productInfoWorksheet
+        let range = xlsx.utils.decode_range(productInfoWorksheet['!ref']);
+
         // Iterate over each row in the range
-        for (let rowNum = 1; rowNum <= 4; rowNum++) {
+        for (let rowNum = range.s.r; rowNum <= 4; rowNum++) {
             let cellAddress = xlsx.utils.encode_cell({ r: rowNum, c: 1 });
             let cell = productInfoWorksheet[cellAddress];
             let cellValue = cell ? cell.v : null;

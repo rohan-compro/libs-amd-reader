@@ -12,8 +12,8 @@ export default class CommonUtil {
     static validateSheetNames(validSheetNames: string[], availableSheetNames: string[]) {
         if (!(validSheetNames?.length > 0 && availableSheetNames?.length > 0)) return;
 
-        validSheetNames = validSheetNames.map(str => str.trim());
-        availableSheetNames = availableSheetNames.map(str => str.trim());
+        validSheetNames = validSheetNames.map(str => str?.trim());
+        availableSheetNames = availableSheetNames.map(str => str?.trim());
 
         return validSheetNames.every((validSheetName: string) => availableSheetNames.includes(validSheetName));
     }
@@ -27,8 +27,8 @@ export default class CommonUtil {
     static validateSheetColumns(validColumnNames: string[], availableColumnNames: string[]) {
         if (!(validColumnNames?.length > 0 && availableColumnNames?.length > 0)) return;
 
-        validColumnNames = validColumnNames.map(str => str.trim());
-        availableColumnNames = availableColumnNames.map(str => str.trim());
+        validColumnNames = validColumnNames.map(str => str?.trim());
+        availableColumnNames = availableColumnNames.map(str => str?.trim());
 
         return validColumnNames.every((validSheetName: string) => availableColumnNames.includes(validSheetName));
     }
