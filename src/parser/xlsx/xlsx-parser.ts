@@ -76,12 +76,18 @@ export default class XlsxParser implements Base {
                 if (colNum == 0) {
                     // handle lo cell
                     if (cellValue) {
-                        if (cellValue.toLocaleLowerCase().trim() == 'Signed off'.toLocaleLowerCase().trim() ||
-                            cellValue.toLocaleLowerCase().trim() == 'End'.toLocaleLowerCase().trim()) {
-                            // handle end / signed off cellValue
+                        if (cellValue.toLocaleLowerCase().trim() == 'End'.toLocaleLowerCase().trim()) {
+                            // add lo to amd
                             lastLoArguments[2] = screenArray;
                             lastLoArguments[3] = learningObjects.length + 1;
                             learningObjects.push(new (Lo as any)(...lastLoArguments));
+                            screenArguments = [];
+                            screenArray = [];
+                            lastLoArguments = [];
+                            break;
+                        }
+                        else if(cellValue.toLocaleLowerCase().trim() == 'Signed off'.toLocaleLowerCase().trim()){
+                            // skip this lo 
                             screenArguments = [];
                             screenArray = [];
                             lastLoArguments = [];
@@ -133,7 +139,7 @@ export default class XlsxParser implements Base {
         let range = xlsx.utils.decode_range(productInfoWorksheet['!ref']);
 
         // Iterate over each row in the range
-        for (let rowNum = range.s.r; rowNum <= 4; rowNum++) {
+        for (let rowNum = range.s.r; rowNum <= range.e.r; rowNum++) {
             let cellAddress = xlsx.utils.encode_cell({ r: rowNum, c: 1 });
             let cell = productInfoWorksheet[cellAddress];
             let cellValue = cell ? cell.v : null;
