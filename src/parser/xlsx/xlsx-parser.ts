@@ -58,8 +58,7 @@ export default class XlsxParser implements Base {
      * @returns {AMD} Returns an AMD object after parsing Learning Object sheet
      */
     public parseLearningObjectSheet() {
-        let learningObjects: Lo[] = [];
-        let lastLoArguments = [], screenArguments: any = [], screenArray = [];
+        let loArray: Lo[] = [], loArguments:any = [], screenArray: Screen[] = [], screenArguments: any = [];
 
         let learningObjectWorksheet = this.workbook.Sheets[SheetNamesEnum.LEARNING_OBJECTS];
 
@@ -78,31 +77,31 @@ export default class XlsxParser implements Base {
                     if (cellValue) {
                         if (cellValue.toLocaleLowerCase().trim() == 'End'.toLocaleLowerCase().trim()) {
                             // add lo to amd
-                            lastLoArguments[2] = screenArray;
-                            lastLoArguments[3] = learningObjects.length + 1;
-                            learningObjects.push(new (Lo as any)(...lastLoArguments));
+                            loArguments[2] = screenArray;
+                            loArguments[3] = loArray.length + 1;
+                            loArray.push(new (Lo as any)(...loArguments));
                             screenArguments = [];
                             screenArray = [];
-                            lastLoArguments = [];
+                            loArguments = [];
                             break;
                         }
                         else if(cellValue.toLocaleLowerCase().trim() == 'Signed off'.toLocaleLowerCase().trim()){
                             // skip this lo 
                             screenArguments = [];
                             screenArray = [];
-                            lastLoArguments = [];
+                            loArguments = [];
                             break;
                         }
                         else {
                             // cellValue is first lo cellValue
-                            lastLoArguments[0] = cellValue;
+                            loArguments[0] = cellValue;
                         }
                     }
                 }
                 else if (colNum == 1) {
                     // handle lo title cellValue
                     if (cellValue) {
-                        lastLoArguments[1] = cellValue;
+                        loArguments[1] = cellValue;
                     }
                 }
                 else {
@@ -128,7 +127,7 @@ export default class XlsxParser implements Base {
                 screenArguments = [];
             }
         }
-        return learningObjects;
+        return loArray;
     }
 
     public parseProductInfoSheet() {
